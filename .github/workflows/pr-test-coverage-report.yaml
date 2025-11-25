@@ -1,0 +1,13 @@
+name: Test Coverage Report
+
+on:
+  pull_request:
+    branches-ignore:
+      - main
+
+jobs:
+  comment-test-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ArtiomTr/jest-coverage-report-action@v2
