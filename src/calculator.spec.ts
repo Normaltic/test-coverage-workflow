@@ -1,13 +1,6 @@
-import {
-  add,
-  subtract,
-  multiply,
-  divide,
-  power
-} from './calculator';
+import { add, subtract, multiply, divide, power } from './calculator';
 
 describe('Calculator Module - Partial Tests', () => {
-
   describe('add', () => {
     it('should return the sum of two numbers', () => {
       expect(add(2, 3)).toBe(5);
@@ -32,7 +25,7 @@ describe('Calculator Module - Partial Tests', () => {
     });
 
     it('should throw an error when dividing by zero', () => {
-      expect(() => divide(5, 0)).toThrow("Cannot divide by zero");
+      expect(() => divide(5, 0)).toThrow('Cannot divide by zero');
     });
   });
 
@@ -41,5 +34,4 @@ describe('Calculator Module - Partial Tests', () => {
       expect(power(2, 3)).toBe(8);
     });
   });
-
 });

@@ -18,7 +18,7 @@ export const multiply = (a: number, b: number): number => a * b;
  */
 export const divide = (a: number, b: number): number => {
   if (b === 0) {
-    throw new Error("Cannot divide by zero");
+    throw new Error('Cannot divide by zero');
   }
   return a / b;
 };
@@ -43,7 +43,7 @@ export const modulo = (a: number, b: number): number => a % b;
  */
 export const factorial = (num: number): number => {
   if (num < 0) {
-    throw new Error("Factorial is not defined for negative numbers");
+    throw new Error('Factorial is not defined for negative numbers');
   }
   if (num === 0) {
     return 1;
