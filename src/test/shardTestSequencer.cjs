@@ -3,8 +3,9 @@ const Sequencer = require('@jest/test-sequencer').default;
 class ShardTestSequencer extends Sequencer {
    
   sort(tests) {
-    if (process.env.CI_SHARD) {
-      const [current, total] = process.env.CI_SHARD.split('/').map((v) => parseInt(v, 10));
+    if (process.env.CI_SHARD && process.env.CI_SHARD_TOTAL) {
+      const current = parseInt(process.env.CI_SHARD, 10);
+      const total = parseInt(process.env.CI_SHARD_TOTAL, 10);
 
       const copyTests = Array.from(tests);
       return copyTests
