@@ -8,8 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        shard: ['1', '2', '3']
-        total: '3'
+        include:
+          - shard: '1'
+            total: '3'
+          - shard: '2'
+            total: '3'
+          - shard: '3'
+            total: '3'
     steps:
       - uses: actions/checkout@v4
 
