@@ -33,9 +33,38 @@ jobs:
           CI_SHARD_TOTAL: ${{ matrix.total }}
         run: yarn test --coverage --testSequencer ./src/test/shardTestSequencer.cjs
 
+      - name: Copy coverage
+        run: |
+          mv coverage/coverage-final.json coverage/coverage-${{ matrix.shard }}.json
+
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report-${{ matrix.shard }}
-          path: coverage/
-          retention-days: 7
+          name: coverage-${{ matrix.shard }}
+          path: coverage/coverage-${{ matrix.shard }}.json
+          retention-days: 1
+
+  merge-and-upload-coverages:
+    runs-on: ubuntu-latest
+    needs: test-coverage
+    steps:
+      - name: Download coverage
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+          path: coverage
+          pattern: coverage-*
+
+      - name: Merge coverage
+        run: |
+          mkdir .nyc_output
+          npx nyc merge coverage
+          mv coverage.json .nyc_output/out.json
+          npx nyc report --reporter json --report-dir coverage --exclude-after-remap false
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage.
+          path: coverage/coverage-final.json
+          retention-days: 1
