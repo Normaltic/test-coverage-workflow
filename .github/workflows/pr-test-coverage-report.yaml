@@ -73,6 +73,14 @@ jobs:
     needs: [merge-and-upload-coverages]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
       - name: Download coverage
         uses: actions/download-artifact@v4
         with:
