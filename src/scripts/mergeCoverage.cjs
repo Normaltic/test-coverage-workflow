@@ -3,8 +3,8 @@ const path = require('path');
 
 function getCoverageFilePaths(dir) {
   const coverageFileRegex = /^coverage-(.*).json$/;
-  const coverageFiles = fs.readdirSync(targetDir).filter(file => coverageFileRegex.test(file));
-  const coverageFilePaths = coverageFiles.map(file => path.join(targetDir, file));
+  const coverageFiles = fs.readdirSync(dir).filter(file => coverageFileRegex.test(file));
+  const coverageFilePaths = coverageFiles.map(file => path.join(dir, file));
   return coverageFilePaths;
 }
 

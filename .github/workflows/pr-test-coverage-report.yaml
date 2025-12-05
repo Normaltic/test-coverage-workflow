@@ -56,7 +56,7 @@ jobs:
 
       - name: Merge coverage
         run: |
-          node ./src/scripts/mergeCoverage.cjs
+          node src/scripts/mergeCoverage.cjs
           
 
       - name: Upload coverage reports
