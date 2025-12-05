@@ -1,6 +1,9 @@
 name: Test Coverage Report
 
-on: [pull_request]
+on:
+  pull_request_target:
+    branches:
+      - main  
 
 jobs:
   test-coverage:
@@ -88,5 +91,5 @@ jobs:
         uses: ArtiomTr/jest-coverage-report-action@v2.3.1
         with:
           coverage-file: merged_coverage.json
-          automations: coverage
+          annotations: coverage
           
