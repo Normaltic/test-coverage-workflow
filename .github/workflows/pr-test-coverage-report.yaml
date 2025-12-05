@@ -70,7 +70,7 @@ jobs:
           retention-days: 1
   
   coverage-comment:
-    need: [merge-and-upload-coverages]
+    needs: [merge-and-upload-coverages]
     runs-on: ubuntu-latest
     steps:
       - name: Download coverage
