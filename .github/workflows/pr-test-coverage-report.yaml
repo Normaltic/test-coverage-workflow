@@ -56,16 +56,14 @@ jobs:
 
       - name: Merge coverage
         run: |
-          mkdir .nyc_output
-          npx nyc merge coverage
-          mv coverage.json .nyc_output/out.json
-          npx nyc report --reporter json --report-dir coverage --exclude-after-remap false
+          node ./src/scripts/mergeCoverage.cjs
+          
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
         with:
-          name: coverage
-          path: coverage/coverage-final.json
+          name: merged_coverage
+          path: merged_coverage.json
           retention-days: 1
   
   coverage-comment:
