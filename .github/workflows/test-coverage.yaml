@@ -8,7 +8,19 @@ on:
         type: string
 
 jobs:
+  sanitize-output-name:
+    runs-on: ubuntu-latest
+    outputs:
+      output-name: coverage-${{ steps.sanitize.outputs.name }}
+    steps:
+      - name: Sanitize branch name
+        id: sanitize
+        run: |
+          SAFE_NAME=$(echo "${{ inputs.branch }}" | sed 's/\//_/g')
+          echo "name=$SAFE_NAME" >> $GITHUB_OUTPUT
+
   test-coverage:
+    needs: [sanitize-output-name]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -37,27 +49,27 @@ jobs:
         env:
           CI_SHARD: ${{ matrix.shard }}
           CI_SHARD_TOTAL: ${{ matrix.total }}
-        run: yarn test --coverage --testLocationInResults --json --outputFile=coverage-shard-${{ matrix.shard }}.json --testSequencer ./src/test/shardTestSequencer.cjs
+        run: >-
+          yarn test
+            --coverage
+            --testLocationInResults
+            --json
+            --outputFile=${{ needs.sanitize-output-name.outputs.output-name }}-shard-${{ matrix.shard }}.json
+            --testSequencer ./src/test/shardTestSequencer.cjs
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-shard-${{ matrix.shard }}
-          path: coverage-shard-${{ matrix.shard }}.json
+          name: ${{ needs.sanitize-output-name.outputs.output-name }}-shard-${{ matrix.shard }}
+          path: ${{ needs.sanitize-output-name.outputs.output-name }}-shard-${{ matrix.shard }}.json
           retention-days: 1
 
   merge-coverage-results:
+    needs: [test-coverage]
     runs-on: ubuntu-latest
     needs: test-coverage
-    outputs:
-      output-name: coverage-${{ steps.sanitize.outputs.name }}
-    steps:
-      - name: Sanitize branch name
-        id: sanitize
-        run: |
-          SAFE_NAME=$(echo "${{ inputs.branch }}" | sed 's/\//_/g')
-          echo "name=$SAFE_NAME" >> $GITHUB_OUTPUT
 
+    steps:
       - uses: actions/checkout@v4
       
       - name: Download coverage
@@ -65,16 +77,16 @@ jobs:
         with:
           merge-multiple: true
           path: coverage
-          pattern: coverage-shard-*
+          pattern: coverage-${{ needs.sanitize-output-name.outputs.output-name }}-shard-*
       
       - name: Merge coverage results
         env:
-          OUTPUT_NAME: ${{ steps.sanitize.outputs.name }}.json
+          OUTPUT_NAME: ${{ needs.sanitize-output-name.outputs.output-name }}.json
         run: node ./src/scripts/mergeCoverage.cjs
 
       - name: Upload merged coverage result
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.sanitize.outputs.name }}
-          path: ${{ steps.sanitize.outputs.name }}.json
+          name: ${{ needs.sanitize-output-name.outputs.output-name }}
+          path: ${{ needs.sanitize-output-name.outputs.output-name }}.json
           retention-days: 1
