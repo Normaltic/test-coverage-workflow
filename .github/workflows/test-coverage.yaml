@@ -1,0 +1,72 @@
+name: Test with coverage
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+
+jobs:
+  test-coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - shard: '1'
+            total: '3'
+          - shard: '2'
+            total: '3'
+          - shard: '3'
+            total: '3'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run tests with coverage
+        env:
+          CI_SHARD: ${{ matrix.shard }}
+          CI_SHARD_TOTAL: ${{ matrix.total }}
+        run: yarn test --coverage --testLocationInResults --json --outputFile=coverage-shard-${{ matrix.shard }}.json --testSequencer ./src/test/shardTestSequencer.cjs
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-shard-${{ matrix.shard }}
+          path: coverage-shard-${{ matrix.shard }}.json
+          retention-days: 1
+
+  merge-coverage-results:
+    runs-on: ubuntu-latest
+    needs: test-coverage
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download coverage
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+          path: coverage
+          pattern: coverage-shard-*
+      
+      - name: Merge coverage results
+        env:
+          OUTPUT_NAME: coverage-${{ inputs.branch }}.json
+        run: node ./src/scripts/mergeCoverage.cjs
+
+      - name: Upload merged coverage result
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ inputs.branch }}
+          path: coverage-${{ inputs.branch }}.json
+          retention-days: 1
