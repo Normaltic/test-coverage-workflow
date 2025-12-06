@@ -1,4 +1,4 @@
-import { add, subtract, multiply, divide, power } from './calculator';
+import { add, subtract, multiply, divide, power, factorial } from './calculator';
 
 describe('Calculator Module - Partial Tests', () => {
   describe('add', () => {
@@ -32,6 +32,16 @@ describe('Calculator Module - Partial Tests', () => {
   describe('power', () => {
     it('should return the base to the exponent power', () => {
       expect(power(2, 3)).toBe(8);
+    });
+  });
+
+  describe('factorial', () => {
+    it('should return 1 for factorial of 0', () => {
+      expect(factorial(0)).toBe(1);
+    });
+
+    it('should return the factorial of a positive number', () => {
+      expect(factorial(5)).toBe(120);
     });
   });
 });
