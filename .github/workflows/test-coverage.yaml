@@ -65,7 +65,7 @@ jobs:
           retention-days: 1
 
   merge-coverage-results:
-    needs: [test-coverage]
+    needs: [sanitize-output-name, test-coverage]
     runs-on: ubuntu-latest
 
     steps:
