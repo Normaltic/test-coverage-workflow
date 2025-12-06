@@ -27,7 +27,7 @@ jobs:
       - name: Download coverage
         uses: actions/download-artifact@v4
         with:
-          name: coverage-head
+          name: test-coverage-head
       
       - name: Generate coverage report
         uses: ArtiomTr/jest-coverage-report-action@v2.3.1
