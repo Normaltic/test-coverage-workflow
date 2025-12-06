@@ -67,6 +67,8 @@ jobs:
   merge-coverage-results:
     needs: [sanitize-output-name, test-coverage]
     runs-on: ubuntu-latest
+    outputs:
+      output-name: ${{ needs.sanitize-output-name.outputs.output-name }}
 
     steps:
       - uses: actions/checkout@v4
