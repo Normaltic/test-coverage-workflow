@@ -33,12 +33,12 @@ jobs:
       - name: Download head coverage
         uses: actions/download-artifact@v4
         with:
-          name: test-coverage-head.json
+          name: test-coverage-head
 
       - name: Download base coverage
         uses: actions/download-artifact@v4
         with:
-          name: test-coverage-base.json
+          name: test-coverage-base
       
       - name: Generate coverage report
         uses: ArtiomTr/jest-coverage-report-action@v2.3.1
