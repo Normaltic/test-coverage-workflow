@@ -12,8 +12,14 @@ jobs:
       branch: ${{ github.event.pull_request.head.ref }}
       output-name: test-coverage-head
 
+  test-coverage-base:
+    uses: ./.github/workflows/test-coverage.yaml
+    with:
+      branch: ${{ github.event.pull_request.base.ref }}
+      output-name: test-coverage-base
+
   coverage-comment:
-    needs: [test-coverage-head]
+    needs: [test-coverage-head, test-coverage-base]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,11 +33,13 @@ jobs:
       - name: Download coverage
         uses: actions/download-artifact@v4
         with:
-          name: test-coverage-head
+          name: test-coverage-head.json
+          name: test-coverage-base.json
       
       - name: Generate coverage report
         uses: ArtiomTr/jest-coverage-report-action@v2.3.1
         with:
           coverage-file: test-coverage-head.json
+          coverage-file-base: test-coverage-base.json
           annotations: coverage
           
