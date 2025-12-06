@@ -76,10 +76,11 @@ jobs:
         with:
           merge-multiple: true
           path: coverage
-          pattern: coverage-${{ needs.sanitize-output-name.outputs.output-name }}-shard-*
+          pattern: ${{ needs.sanitize-output-name.outputs.output-name }}-shard-*
       
       - name: Merge coverage results
         env:
+          TARGET_DIR: coverage
           OUTPUT_NAME: ${{ needs.sanitize-output-name.outputs.output-name }}.json
         run: node ./src/scripts/mergeCoverage.cjs
 
