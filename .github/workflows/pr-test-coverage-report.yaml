@@ -33,7 +33,7 @@ jobs:
         env:
           CI_SHARD: ${{ matrix.shard }}
           CI_SHARD_TOTAL: ${{ matrix.total }}
-        run: yarn test --coverage --testLocationInResults --outputFile=coverage-${{ matrix.shard }}.json --testSequencer ./src/test/shardTestSequencer.cjs
+        run: yarn test --coverage --testLocationInResults --json --outputFile=coverage-${{ matrix.shard }}.json --testSequencer ./src/test/shardTestSequencer.cjs
 
       # - name: Copy coverage
       #   run: |
