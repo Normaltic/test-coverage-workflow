@@ -51,11 +51,11 @@ jobs:
           CI_SHARD_TOTAL: ${{ matrix.total }}
         run: >-
           yarn test
-            --coverage
-            --testLocationInResults
-            --json
-            --outputFile=${{ needs.sanitize-output-name.outputs.output-name }}-shard-${{ matrix.shard }}.json
-            --testSequencer ./src/test/shardTestSequencer.cjs
+          --coverage
+          --testLocationInResults
+          --json
+          --outputFile=${{ needs.sanitize-output-name.outputs.output-name }}-shard-${{ matrix.shard }}.json
+          --testSequencer ./src/test/shardTestSequencer.cjs
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
