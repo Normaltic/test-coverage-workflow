@@ -33,13 +33,17 @@ jobs:
         env:
           CI_SHARD: ${{ matrix.shard }}
           CI_SHARD_TOTAL: ${{ matrix.total }}
-        run: yarn test --coverage --testLocationInResults --outputFile=coverage/coverage-${{ matrix.shard }}.json --testSequencer ./src/test/shardTestSequencer.cjs
+        run: yarn test --coverage --testLocationInResults --outputFile=coverage-${{ matrix.shard }}.json --testSequencer ./src/test/shardTestSequencer.cjs
+
+      # - name: Copy coverage
+      #   run: |
+      #     mv coverage/coverage-final.json coverage/coverage-${{ matrix.shard }}.json
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
         with:
           name: coverage-${{ matrix.shard }}
-          path: coverage/coverage-${{ matrix.shard }}.json
+          path: coverage-${{ matrix.shard }}.json
           retention-days: 1
 
   merge-and-upload-coverages:
