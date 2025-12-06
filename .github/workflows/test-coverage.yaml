@@ -49,7 +49,15 @@ jobs:
   merge-coverage-results:
     runs-on: ubuntu-latest
     needs: test-coverage
+    outputs:
+      output-name: coverage-${{ steps.sanitize.outputs.name }}
     steps:
+      - name: Sanitize branch name
+        id: sanitize
+        run: |
+          SAFE_NAME=$(echo "${{ inputs.branch }}" | sed 's/\//_/g')
+          echo "name=$SAFE_NAME" >> $GITHUB_OUTPUT
+
       - uses: actions/checkout@v4
       
       - name: Download coverage
@@ -61,12 +69,12 @@ jobs:
       
       - name: Merge coverage results
         env:
-          OUTPUT_NAME: coverage-${{ inputs.branch }}.json
+          OUTPUT_NAME: ${{ steps.sanitize.outputs.name }}.json
         run: node ./src/scripts/mergeCoverage.cjs
 
       - name: Upload merged coverage result
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ inputs.branch }}
-          path: coverage-${{ inputs.branch }}.json
+          name: ${{ steps.sanitize.outputs.name }}
+          path: ${{ steps.sanitize.outputs.name }}.json
           retention-days: 1

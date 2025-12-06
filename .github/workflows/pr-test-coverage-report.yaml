@@ -26,11 +26,11 @@ jobs:
       - name: Download coverage
         uses: actions/download-artifact@v4
         with:
-          name: coverage-${{ github.event.pull_request.head.ref }}
+          name: ${{ needs.test-coverage-head.outputs.output-name }}
       
       - name: Generate coverage report
         uses: ArtiomTr/jest-coverage-report-action@v2.3.1
         with:
-          coverage-file: coverage-${{ github.event.pull_request.head.ref }}.json
+          coverage-file: ${{ needs.test-coverage-head.outputs.output-name }}.json
           annotations: coverage
           
