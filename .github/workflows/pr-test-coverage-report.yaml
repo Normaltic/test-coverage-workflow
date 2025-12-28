@@ -44,6 +44,6 @@ jobs:
         uses: ArtiomTr/jest-coverage-report-action@v2.3.1
         with:
           coverage-file: test-coverage-head.json
-          coverage-file-base: test-coverage-base.json
+          base-coverage-file: test-coverage-base.json
           annotations: coverage
           
